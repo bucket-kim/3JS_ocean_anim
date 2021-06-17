@@ -21,12 +21,12 @@ const scene = new THREE.Scene();
  * Water
  */
 // Geometry
-const waterGeometry = new THREE.PlaneGeometry(2, 2, 128, 128);
+const waterGeometry = new THREE.PlaneGeometry(2, 2, 512, 512);
 
 // Color
 const debugObj = {};
-debugObj.depthColor = "#0a4578";
-debugObj.surfaceColor = "#63b8e6";
+debugObj.depthColor = "#186691";
+debugObj.surfaceColor = "#9bd8ff";
 
 // Material
 const waterMaterial = new THREE.ShaderMaterial({
@@ -34,6 +34,7 @@ const waterMaterial = new THREE.ShaderMaterial({
   fragmentShader: waterFragmentShader,
   uniforms: {
     uTime: { value: 0 },
+
     uBigWaveAnimation: {
       value: 0.25,
     },
@@ -44,14 +45,27 @@ const waterMaterial = new THREE.ShaderMaterial({
       value: 0.75,
     },
 
+    uSmallWaveElevation: {
+      value: 0.15,
+    },
+    uSmallWaveFrequency: {
+      value: 3.0,
+    },
+    uSmallWaveSpeed: {
+      value: 0.2,
+    },
+    uSmallWaveIteration: {
+      value: 4.0,
+    },
+
     uDepthColor: {
       value: new THREE.Color(debugObj.depthColor),
     },
     uSurfaceColor: {
       value: new THREE.Color(debugObj.surfaceColor),
     },
-    uColorOffset: { value: 0.25 },
-    uColorMultiplier: { value: 2 },
+    uColorOffset: { value: 0.08 },
+    uColorMultiplier: { value: 3.5 },
   },
 });
 
@@ -79,6 +93,32 @@ gui
   .max(4.0)
   .step(0.001)
   .name("u Big Wave Speed");
+
+gui
+  .add(waterMaterial.uniforms.uSmallWaveElevation, "value")
+  .min(0)
+  .max(1.0)
+  .step(0.001)
+  .name("u Small Wave Elevation");
+gui
+  .add(waterMaterial.uniforms.uSmallWaveFrequency, "value")
+  .min(0)
+  .max(30.0)
+  .step(0.001)
+  .name("u Small Wave Frequency");
+gui
+  .add(waterMaterial.uniforms.uSmallWaveSpeed, "value")
+  .min(0)
+  .max(4.0)
+  .step(0.001)
+  .name("u Small Wave Speed");
+gui
+  .add(waterMaterial.uniforms.uSmallWaveIteration, "value")
+  .min(0)
+  .max(5.0)
+  .step(1)
+  .name("u Small Wave Iteration");
+
 gui.addColor(debugObj, "depthColor").onChange(() => {
   waterMaterial.uniforms.uDepthColor.value.set(debugObj.depthColor);
 });
